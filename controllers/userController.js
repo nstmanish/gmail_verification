@@ -44,7 +44,7 @@ exports.register = async (req, res) => {
             {
                 token : token,  
             }
-        )
+        );
     
         user.token = token;
 
