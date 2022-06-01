@@ -30,10 +30,9 @@ exports.register = async (req, res) => {
             last_name,
             email: email.toLowerCase(), 
             password: encryptedPassword,
-            verifyMail: 0,
         });
 
-        const token = jwt.sign(
+        const token = await jwt.sign(
             { user_id: user._id, email },
             process.env.TOKEN_KEY,
             {
@@ -41,9 +40,15 @@ exports.register = async (req, res) => {
             }
         );
         
+        await User.updateOne({ _id : user._id },
+            {
+                token : token,  
+            }
+        )
+    
         user.token = token;
 
-        var mailOptions = {
+        const mailOptions = {
             from: process.env.MAILID,
             to: email,
             subject: 'Email verification',
