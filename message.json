@@ -1,0 +1,11 @@
+{
+    "INVALID_KEY" : "Invalide Key",
+    "SUCCESSFULL" : "Successfull",
+    "FAILED"      : "Failed",
+    "ALL_INPUT_REQUIRE" : "All input require",
+    "USER_EXIST" : "User Exist",
+    "FILE_UPLOADED_SUCCESSFULL" : "File Uploaded",
+    "FILE_UPLOADED_FAILED" : "File Upload Fail",
+    "INDEX_PAGE" : "Index Page",
+    "SUBJECT_VERIFY_MAIL": "Email verification"
+}

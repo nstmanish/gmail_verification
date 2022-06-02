@@ -5,10 +5,11 @@ const  {
     getStatusCode, 
 } =  require('http-status-codes');
 
-const User      = require('../models/userModel');
-const bcrypt    = require('bcryptjs');
-const jwt       = require("jsonwebtoken");
-const {transporter}  = require('../config/mailer');
+const User             = require('../models/userModel');
+const bcrypt           = require('bcryptjs');
+const jwt              = require("jsonwebtoken");
+const MailVarification = require('../helper/mail');
+const Message          = require('../message.json');
 
 
 exports.register = async (req, res) => {
@@ -20,7 +21,7 @@ exports.register = async (req, res) => {
         const oldUser = await User.findOne({ email });
 
         if (oldUser) {
-            return res.status(StatusCodes.CONFLICT).json({message:"user Already Exist", data:oldUser });
+            return res.status(StatusCodes.CONFLICT).json({message: Message.USER_EXIST , data:oldUser });
         }
 
         encryptedPassword = await bcrypt.hash(password, 10);
@@ -48,21 +49,9 @@ exports.register = async (req, res) => {
     
         user.token = token;
 
-        const mailOptions = {
-            from: process.env.MAILID,
-            to: email,
-            subject: 'Email verification',
-            html: '<a href="http://localhost:3000/user/verification/mail/'+user._id+'" >Click here for verification</a>'
-        };
-
-        transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
-
+        // Send Mail
+        await MailVarification.mailVerification(user);
+    
         res.status(StatusCodes.CREATED).json(user);
 
     } catch (err) {
@@ -78,7 +67,7 @@ exports.login = async (req, res) => {
         const { email, password } = req.body;
 
         if (!(email && password)) {
-            return res.status(StatusCodes.BAD_REQUEST).send("All input is required");
+            return res.status(StatusCodes.BAD_REQUEST).send(Message.ALL_INPUT_REQUIRE);
         }
 
         const user = await User.findOne({ email });
@@ -98,7 +87,7 @@ exports.login = async (req, res) => {
             return res.status(StatusCodes.OK).json(user);
         }
 
-        res.status(StatusCodes.BAD_REQUEST).json( {message: "Failed", data:[] } );
+        res.status(StatusCodes.BAD_REQUEST).json( {message: Message.FAILED, data:[] } );
 
     } catch (errors) {
         console.log(errors);
@@ -118,7 +107,7 @@ exports.verify = async (req, res) => {
             )
             .exec(function (err, data){
                 if (err) { return next(err); }
-                res.json({message:"successfull", data});
+                res.json({message: Message.SUCCESSFULL, data});
             });
         }
 
