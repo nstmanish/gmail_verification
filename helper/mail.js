@@ -1,5 +1,11 @@
 const {transporter}    = require('../config/mailer');
 const Message          = require('../message.json');
+const  { 
+    ReasonPhrases, 
+    StatusCodes, 
+    getReasonPhrase, 
+    getStatusCode, 
+} =  require('http-status-codes');
 
 exports.mailVerification = async (user) => {
 
@@ -12,7 +18,7 @@ exports.mailVerification = async (user) => {
 
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-            console.log(error);
+            throw new Error(error)
         } else {
             console.log('Email sent: ' + info.response);
         }

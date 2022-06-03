@@ -51,11 +51,13 @@ exports.register = async (req, res) => {
 
         // Send Mail
         await MailVarification.mailVerification(user);
-    
+
         res.status(StatusCodes.CREATED).json(user);
 
     } catch (err) {
-        console.log(err);
+
+        res.status(StatusCodes.BAD_REQUEST).send(err);
+        
     }
 
 }
@@ -90,7 +92,7 @@ exports.login = async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json( {message: Message.FAILED, data:[] } );
 
     } catch (errors) {
-        console.log(errors);
+        res.status(StatusCodes.BAD_REQUEST).send(err);
     }
 }
 
@@ -112,7 +114,7 @@ exports.verify = async (req, res) => {
         }
 
     } catch (errors) {
-        console.log(errors);
+        res.status(StatusCodes.BAD_REQUEST).send(err);
     }
 
 }

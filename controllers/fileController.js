@@ -21,9 +21,15 @@ exports.index = async (req, res) => {
 
 // upload folder
 exports.upload = async (req, res) => {
-    const file = await File.create({
-        user_id   : req.user.user_id,
-        path      : req.file.path
-    });
-    res.status(StatusCodes.OK).json({ message: Message.FILE_UPLOADED_SUCCESSFULL, data:[] });
+
+    try {
+        const file = await File.create({
+            user_id   : req.user.user_id,
+            path      : req.file.path
+        });
+        res.status(StatusCodes.OK).json({ message: Message.FILE_UPLOADED_SUCCESSFULL, data:[] });
+    
+    }catch(err){
+        return res.status(StatusCodes.BAD_REQUEST).send(err);
+    }
 }
