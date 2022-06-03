@@ -20,5 +20,9 @@ const upload = multer({ storage })
 router.get ('/'          , auth                           , fileController.index );
 router.post('/uploadfile', [auth, upload.single('files')] , fileController.upload);
 
+router.get('/tutorial', fileController.createTutorial);
+router.get('/addComments/:tutorialId', fileController.addComments);
+router.get('/displaydata', fileController.displaydata);
+
 // Export
 module.exports = router;
