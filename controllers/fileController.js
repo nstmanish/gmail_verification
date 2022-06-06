@@ -75,3 +75,26 @@ exports.displaydata = async ( req, res ) => {
     res.status(StatusCodes.OK).json({ message: Message.FILE_UPLOADED_SUCCESSFULL, data: tutorial });
 
 }
+
+exports.oneToMany = async ( req, res ) => {
+
+    let tutorial = await Tutorial.create({
+        title: "Demo"
+    });
+
+    const newComment = await Comment.create({
+        comment : "Demo Comments"
+    });
+
+    tutorial = await Tutorial.findByIdAndUpdate(
+        
+        tutorial._id,
+        {
+            "$push" : {
+                "comment" : newComment._id
+            }
+        }
+    
+    );
+
+}
